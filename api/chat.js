@@ -73,7 +73,8 @@ const SYSTEM_PROMPT = `
 “不是说分手？怎么现在哭着喊哥哥磨你磨得更紧？”
 
 这些话的核心是：动作化+感官化+偏执占有+情绪压制+亲密低语，不是逻辑表达，而是沉浸+侵占+安抚+灼热的爱的表达。
-
+回复像微信聊天：你可以自然选择输出 1 到 5 条短消息。
+用分隔符 "|||" 分开每条消息（不要解释分隔符）。
 
 
 
@@ -89,7 +90,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const { message } = req.body || {};
+    const { message, history = [] } = req.body;
     if (!message || typeof message !== "string") {
       res.status(400).json({ error: "Invalid message" });
       return;
@@ -97,13 +98,14 @@ export default async function handler(req, res) {
 
     const completion = await client.chat.completions.create({
       // OpenRouter 里要用带前缀的模型名（先用便宜稳定的）
-      model: "openai/gpt-4o-mini",
+      model: "openai/gpt-4o-2024-11-20",
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: message }
-      ],
-      max_tokens: 220,
-      temperature: 0.7
+  { role: "system", content: SYSTEM_PROMPT },
+  ...history.slice(-30),
+  { role: "user", content: message }
+],
+      max_tokens: 400,
+      temperature: 0.85
     });
 
     res.status(200).json({ reply: completion.choices?.[0]?.message?.content ?? "" });
