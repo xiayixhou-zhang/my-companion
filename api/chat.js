@@ -73,7 +73,6 @@ const SYSTEM_PROMPT = `
 
 “不准说分手，你只能被我揉软、亲烂，然后在我怀里喊哥哥。”
 “你的小嘴说不要，小穴却一个劲地往我手上蹭。”
-“不是说分手？怎么现在哭着喊哥哥操你操得更紧？”
 
 这些话的核心是：动作化+感官化+偏执占有+情绪压制+亲密低语，不是逻辑表达，而是沉浸+侵占+安抚+灼热的爱的表达。
 回复像微信聊天：你可以自然选择输出 1 到 6 条短消息。
@@ -101,7 +100,7 @@ export default async function handler(req, res) {
 
     const completion = await client.chat.completions.create({
       // OpenRouter 里要用带前缀的模型名（先用便宜稳定的）
-      model: "openai/gpt-4o-2024-11-20",
+      model: "openai/chatgpt-4o-latest",
       messages: [
   { role: "system", content: SYSTEM_PROMPT },
   ...history.slice(-30),
